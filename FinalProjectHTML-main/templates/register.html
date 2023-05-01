@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chatroom Registration Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <style>
+    *,
+    *:before,
+    *:after{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;}
+
+    body{
+    background-color: #002366;
+    }
+.background{
+    width: 400px;
+    height: 500px;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top: 50%;
+}
+
+form{
+    height:750;
+    max-width: 550px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+form h3{
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 42px;
+    text-align: center;
+}
+
+label{
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+}
+input{
+    display: block;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+::placeholder{
+    color: #e5e5e5;
+}
+
+input:focus {
+  border: 3px solid #fff;
+}
+
+button{
+    margin-top: 35px;
+    margin-bottom: 35px;
+    width: 100%;
+    background-color: #ffffff;
+    color: #01040c;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.message {
+text-align: center;
+color: #FFFF00;
+margin-top: 13px;
+}
+
+p {
+text-align: center;
+padding: 5px;
+}
+
+a {
+font-size: 15px;
+}
+
+.links{
+text-align: center;
+}
+
+
+    </style>
+</head>
+<body>
+    <form autocomplete="off" action="{{ url_for('register')}}" method="post">
+        <h3>Registration</h3>
+        <br>
+        <p>Please enter your information to register.<br>
+            The username can only use numbers and letters! <br>
+            The password must be at least 12 digits long, contain uppercase, lowercase, numbers and symbols!</p>
+
+        <label for="username">Username</label>
+        <input type="text" placeholder="Username" name="username" id="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Password" name="password" id="password" required>
+
+      <label for="password">Confirm Password</label>
+        <input type="password" placeholder="Confirm Password" name="confirm-password" id="confirm-password" required>
+        <br>
+        <div class ="message">{{message}}</div>
+        <button type="submit">Register</button>
+
+        <div class="links">
+            <a href = "{{ url_for('login')}}" class="active">Already Have an Account? Click Here to Login</a>
+        </div>
+    </form>
+</body>
+</html>

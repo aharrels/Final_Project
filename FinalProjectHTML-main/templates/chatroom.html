@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Chatroom</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/style.css') }}">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <style>
+
+html {
+  box-sizing: border-box;
+  background-color: #002366;
+  }
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins',sans-serif;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  height: 99vh;
+  overflow: hidden;
+  }
+
+.chatbox {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  height: calc(100% - 50px);
+  max-width: 880px;
+  width: 100%;
+  background-color: rgba(255,255,255,0.10);
+  border: 2px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.1);
+  box-shadow: 0 0 40px rgba(8,7,16,0.6);
+  }
+
+.title-section {
+  justify-content: space-between;
+  font-size:large;
+  text-align: center;
+  color: #f5f5f5;
+  padding: 10px;
+  }
+
+.message-display {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  }
+
+.message-display::-webkit-scrollbar {
+  width: 5px;
+  }
+
+.message-display::-webkit-scrollbar-track {
+  background: #dcdcdc;
+  }
+
+.message-display::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  }
+
+.message {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 15px;
+  }
+
+.message-bubble {
+  width: 550px;
+
+  padding: 10px;
+  border-radius: 10px;
+  }
+
+.message-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  }
+
+.message-content-name {
+  margin-right: 10px;
+  font-weight: bold;
+  font-size: 1.15em;
+  }
+
+.message-content-time {
+  font-size: 1.05em;
+  }
+
+.not-user-message .message-bubble {
+  border-bottom-left-radius: 0;
+  background: #fffafa;
+  color: #002366;
+  }
+
+.user-message {
+  flex-direction: row-reverse;
+  }
+
+.user-message .message-bubble {
+  background: #00b376;
+  color: #fffafa;
+  border-bottom-right-radius: 0;
+  }
+
+
+.input-message-box {
+  display: flex;
+  padding: 10px;
+  }
+
+.input-message-box * {
+  font-size: 1em;
+  border: none;
+  border-radius: 3px;
+  padding: 10px;
+  }
+
+  ::placeholder{
+    color: #e5e5e5;
+}
+
+.message-input {
+  flex: 1;
+  background-color: rgba(255,255,255,0.15);
+  color: #ffffff;
+  }
+
+.send-button {
+  cursor: pointer;
+  background: #f5f5f5;
+  font-weight: bold;
+  color: #002366;
+  margin-left: 10px;
+  transition: background .15s;
+  }
+
+.send-button:hover {
+  background: rgb(175, 175, 175);
+  }
+
+.message-display {
+  background-color: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+  }
+
+.logout-button{
+  }
+
+ .logbtn{
+ color: #002366;
+ text-decoration:none;
+ position:absolute; top:7px; right:7px;
+ background: #ffffff;
+ border-radius: 30px;
+ height: 25px;
+ width: 75px;
+ padding: 1px;
+ }
+
+  </style>
+</head>
+
+<body>
+
+<form class="logout-button">
+  <button formaction="{{ url_for('logout')}}" class="logbtn">LOGOUT</button>
+</form>
+
+  <section class="chatbox">
+    <header class="title-section">
+      <div class="title">
+         SpeakSphere Chatroom
+      </div>
+    </header>
+
+    <main class="message-display"></main>
+
+    <form class="input-message-box">
+      <input autocomplete="off" type="text" class="message-input" id="textInput" placeholder="Enter Chat Message Here...">
+      <button type="submit" class="send-button">Send</button>
+    </form>
+
+  </section>
+
+  <script>
+
+    let time;
+    let messageNumber = 0;
+    var lastNonMessage = [""];
+    const activeSession = {{active|tojson}};
+    const PERSON_NAME = {{username|tojson}};
+    const messageForm = get(".input-message-box");
+    const messageInput = get(".message-input");
+    const messageDisplay = get(".message-display");
+
+     let idleUserResponse = function () {
+      if (activeSession == "true"){
+        time = setTimeout(idleAction, 5000);
+        document.onclick = resetTimer;
+        document.onkeypress = resetTimer;
+      }
+      };
+
+      function idleAction(){
+      nonUserResponse(lastNonMessage[0]);
+      idleUserResponse();
+      }
+
+     function resetTimer() {
+      clearTimeout(time);
+      time = setTimeout(idleAction, 5000)
+      }
+
+    function getDate(date) {
+      const hour = "0" + date.getHours();
+      const minute = "0" + date.getMinutes();
+      return `${hour.slice(-2)}:${minute.slice(-2)}`;
+    }
+
+    function get(selector, root=document) {
+      return root.querySelector(selector);
+    }
+
+    function addMessage(name, user, text) {
+      const messageHTML = `
+      <div class="message ${user}-message">
+
+        <div class="message-bubble" >
+
+          <div class="message-content">
+            <div class="message-content-name">${name}</div>
+            <div class="message-content-time">${getDate(new Date())}</div>
+          </div>
+
+          <div class="message-text">${text}</div>
+        </div>
+      </div>`;
+
+      messageDisplay.insertAdjacentHTML("beforeend", messageHTML);
+      messageDisplay.scrollTop += 1000;
+    }
+
+
+    //getting user input text to display it and calling the nonUserResponse function
+    messageForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      const messageText = messageInput.value;
+
+      if (messageText.replace(/\s/g, '') == '') {
+      messageInput.value = "";
+      return;
+      }
+
+      addMessage(PERSON_NAME, "user", messageText);
+      messageInput.value = "";
+
+      if (activeSession == "true"){
+        setTimeout(nonUserResponse, 1500, messageText);
+        setTimeout(resetTimer, 1500);
+      }
+      else {
+        nonUserResponse(messageText)
+      }
+    });
+
+
+  //Getting and displaying response to user input text
+    function nonUserResponse(text) {
+      $.get("/get", { message: text }).done(function (data) {
+        const messageText = data[1];
+        const notUser = data[0];
+        lastNonMessage[0] = messageText;
+        console.log(lastNonMessage[0]);
+        addMessage(notUser, "not-user", messageText);
+      });
+
+    }
+
+    idleUserResponse();
+  </script>
+</body>
+</html>
