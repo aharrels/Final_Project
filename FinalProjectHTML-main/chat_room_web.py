@@ -8,7 +8,7 @@ import pymysql
 import pymysql.cursors
 import random
 import os
-from decouple import config
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
