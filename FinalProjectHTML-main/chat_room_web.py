@@ -35,12 +35,11 @@ user = os.environ.get('user')
 database = os.environ.get('database')
 password = os.environ.get('password')
 
-try:
-    db = pymysql.connect(host=host,
-                     user=user, password=password,database=database)
-    cursor = db.cursor()
-except ClientError as e:
-    print("Bad connect")
+
+db = pymysql.connect(host=host,
+    user=user, password=password,database=database)
+cursor = db.cursor()
+
 
 
 @app.route('/')
