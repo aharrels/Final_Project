@@ -6,9 +6,9 @@ import openai
 import chat_bot_api
 import pymysql
 import pymysql.cursors
-import dbconnection
 import random
-
+import os
+from decouple import config
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -20,7 +20,8 @@ logger.addHandler(file_handler)
 app = Flask(__name__)
 
 #used to assign session cookies/secure the cookies
-app.secret_key = 
+secret = os.environ.get('secret_key')
+app.secret_key = secret
 
 #used to keep track of previous messagers/messages
 lastMessage = ""
@@ -29,10 +30,14 @@ lastIndex = -1
 #This information will need to be updated for your personal stuff
 
 #confinguring python to connect to the database
+host = os.environ.get('host')
+user = os.environ.get('user')
+database = os.environ.get('database')
+password = os.environ.get('password')
 
 try:
-    db = pymysql.connect(host=,
-                     user=, password=,database=)
+    db = pymysql.connect(host=host,
+                     user=user, password=password,database=database)
     cursor = db.cursor()
 except ClientError as e:
     print("Bad connect")
