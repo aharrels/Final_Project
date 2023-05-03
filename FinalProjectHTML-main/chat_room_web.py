@@ -4,10 +4,9 @@ import logging
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import openai
 import chat_bot_api
-import pymysql
-import pymysql.cursors
 import random
 import os
+import psycopg2
 
 
 logger = logging.getLogger(__name__)
@@ -35,11 +34,8 @@ user = os.environ.get('user')
 database = os.environ.get('database')
 password = os.environ.get('password')
 
-
-db = pymysql.connect(host=host,
-    user=user, password=password,database=database)
-cursor = db.cursor()
-
+conn = psycopg2.connect(host=host, database=database, user=user, password=password)
+cursor = conn.cursor()
 
 
 @app.route('/')
@@ -132,7 +128,8 @@ parameters"""
             #this cursor allows the actual interaction with the database
             sql = "INSERT INTO accounts VALUES (NULL, %s, %s)"
             cursor.execute(sql, (username, password,))
-            db.commit()
+            conn.commit()
+            conn.close()
             return redirect(url_for('login'))
 
     #if username and password left blank it will request you fill in info
