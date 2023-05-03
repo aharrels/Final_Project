@@ -34,8 +34,9 @@ user = os.environ.get('user')
 database = os.environ.get('database')
 password = os.environ.get('password')
 
-conn = psycopg2.connect(host=host, database=database, user=user, password=password)
-cursor = conn.cursor()
+db = pymysql.connect(host=host,
+                     user=user, password=password,database=database)
+cursor = db.cursor()
 
 
 @app.route('/')
@@ -128,8 +129,7 @@ parameters"""
             #this cursor allows the actual interaction with the database
             sql = "INSERT INTO accounts VALUES (NULL, %s, %s)"
             cursor.execute(sql, (username, password,))
-            conn.commit()
-            conn.close()
+            db.commit()
             return redirect(url_for('login'))
 
     #if username and password left blank it will request you fill in info
