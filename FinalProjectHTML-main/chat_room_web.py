@@ -6,7 +6,8 @@ import openai
 import chat_bot_api
 import random
 import os
-import psycopg2
+import pymysql.cursors
+import pymysql
 
 
 logger = logging.getLogger(__name__)
@@ -177,10 +178,10 @@ def get_bot_response():
         if (userText == ""):
             userText = "Hello"
 
-        chatbot = chat_bot_api.generateChatResponse(userText, key, index)
-        lastMessage = chatbot[1]
+        response = chatbot.generateChatResponse(userText, key, index)
+        lastMessage = response[1]
 
-        return chatbot
+        return response
 
     else:
         return ["ALERT", "Please login"]
