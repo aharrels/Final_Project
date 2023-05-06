@@ -8,7 +8,6 @@ import random
 import os
 import pymysql.cursors
 import pymysql
-import psycopg2
 
 
 logger = logging.getLogger(__name__)
@@ -37,7 +36,7 @@ user = os.environ.get('user')
 database = os.environ.get('database')
 password = os.environ.get('password')
 
-db = psycopg2.connect(host=host,
+db = pymysql.connect(host=host,
                      user=user, password=password,database=database)
 cursor = db.cursor()
 
@@ -106,7 +105,6 @@ parameters"""
         sql = "SELECT * FROM accounts WHERE username = %s"
         cursor.execute(sql, (username,))
         exists = cursor.fetchone()
-        
         if exists:
             message = "that account already exists"
         #using regular expression to check username is valid
