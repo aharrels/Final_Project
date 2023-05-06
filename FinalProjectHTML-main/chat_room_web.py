@@ -77,8 +77,8 @@ def login():
         else:
             logger.info("%s %s login successful", username, request.remote_addr)
             session['loggedin'] = True
-            session['id'] = account[1]
-            session['username'] = account[2]
+            session['id'] = account[0]
+            session['username'] = account[1]
             session['key'] = key
             return redirect(url_for('index2'))
 
