@@ -49,6 +49,9 @@ def login():
     and if it is stored in the database
     will allow you to access the rest of the pages"""
 
+    if "loggedin" in session:
+        return render_template('chatroom.html', username=session['username'], active="true")
+    
     message = "Please login"
 
     #if the username and password are entered it will query the database to see if they are saved
@@ -91,6 +94,9 @@ def register():
 and password and check to make sure that they fall within specificed
 parameters"""
 
+    if "loggedin" in session:
+        return render_template('chatroom.html', username=session['username'], active="true")
+    
     message = "Please register to continue"
 
     #will just reload the register template
