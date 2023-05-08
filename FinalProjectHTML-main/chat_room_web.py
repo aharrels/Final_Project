@@ -114,7 +114,7 @@ parameters"""
         exists = cursor.fetchone()
         
         if exists:
-            message = "that account already exists"
+            message = "That username is already exists!"
         #using regular expression to check username is valid
         elif not re.match(r'[A-Za-z0-9]*$', username):
             message= 'Username must contain only letters and numbers!'
