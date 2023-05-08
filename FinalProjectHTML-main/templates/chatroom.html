@@ -208,7 +208,12 @@ body {
 
      let idleUserResponse = function () {
       if (activeSession == "true"){
+        if (messageNumber == 0){
         time = setTimeout(idleAction, 5000);
+        }
+        else {
+        time = setTimeout(idleAction, 20000);
+        }      
         document.onclick = resetTimer;
         document.onkeypress = resetTimer;
       }
@@ -216,12 +221,13 @@ body {
 
       function idleAction(){
       nonUserResponse(lastNonMessage[0]);
+      messageNumber++;  
       idleUserResponse();
       }
 
      function resetTimer() {
       clearTimeout(time);
-      time = setTimeout(idleAction, 5000)
+      time = setTimeout(idleAction, 7000)
       }
 
     function getDate(date) {
@@ -269,8 +275,8 @@ body {
       messageInput.value = "";
 
       if (activeSession == "true"){
-        setTimeout(nonUserResponse, 1500, messageText);
-        setTimeout(resetTimer, 1500);
+        setTimeout(nonUserResponse, 3000, messageText);
+        setTimeout(resetTimer, 3000);
       }
       else {
         nonUserResponse(messageText)
