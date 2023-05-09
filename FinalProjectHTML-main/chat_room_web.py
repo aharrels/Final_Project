@@ -175,13 +175,11 @@ def get_bot_response():
 
         # getting an index of a different artificial chatter than the last one
         if (lastMessage == userText):
-            while (index == lastIndex):
-                index = random.randint(0, 3)
+            index = random.choice([number for number in [0, 1, 2, 3] if number != lastIndex])
 
         # getting an index of the first artificial chatter for the session
         if (index < 0):
             index = random.randint(0, 3)
-            lastIndex = index
 
         #If the user decides not to type in the start of the session
         if (userText == ""):
