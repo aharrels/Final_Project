@@ -26,7 +26,7 @@ app.secret_key = secret
 
 #used to keep track of previous messagers/messages
 lastMessage = ""
-lastIndex = -1
+lastIndex = random.randint(0, 3)
 
 #chatbot object
 chatters = chat_bot_api.chatbot()
@@ -173,17 +173,13 @@ def get_bot_response():
         # add getting the index here
         index = lastIndex
 
-        # getting an index of a different artificial chatter than the last one
-        if (lastMessage == userText):
-            index = random.choice([number for number in [0, 1, 2, 3] if number != lastIndex])
-
-        # getting an index of the first artificial chatter for the session
-        if (index < 0):
-            index = random.randint(0, 3)
-
         #If the user decides not to type in the start of the session
         if (userText == ""):
             userText = "Hello"
+            
+        # getting an index of a different artificial chatter than the last one
+        if (lastMessage == userText):
+            index = random.choice([number for number in [0, 1, 2, 3] if number != lastIndex])
 
         response = chatters.generateChatResponse(userText, key, index)
         lastMessage = response[1]
