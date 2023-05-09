@@ -189,7 +189,7 @@ def get_bot_response():
 
         response = chatters.generateChatResponse(userText, key, index)
         lastMessage = response[1]
-
+        lastIndex = index
         return response
 
     else:
