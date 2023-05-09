@@ -5,6 +5,17 @@ class chatbot:
     def __init__(self):
         self.language = ""
         self.name_list: list[str] = ["Phil", "Janet", "Maurice", "Shannon"]
+        self.messages = [] #messages defined as property to maintain list of messages after generateChatResponse completes
+        self.role = [] #this will be the chatbot's instructions that are generated the first time the generateChatResponse is called
+        self.mq_length = 8 #max queue length for messages
+        
+    def add_new_message(self, message):
+        '''This function adds a new message to the array and pops oldest message if max length is reached.'''
+        if len(self.messages) == self.mq_length:
+            self.messages = self.messages[1:] + [message]
+        else:
+            self.messages.append(message)
+
 
     def generateChatResponse(self, message: str, key: str, index: int) -> list[str]:
         '''This fucntion will pull the user input and send it through the chatbot
@@ -16,7 +27,8 @@ class chatbot:
 
         name = self.name_list[index]
 
-        prompt_list = [f'''You are a real person named {name}. You will
+        #changed to instructions, because it can just simply be a string instead of a list
+        instructions = f'''You are a real person named {name}. You will
             generate chat messages in {self.language}. The messages you generate must be in {self.language} and
             conform to the following rules:
             rule 1: Be informal unless instructed by the user to speak formally.
@@ -33,11 +45,15 @@ class chatbot:
             rule 11: You will never reply with a response that you say or imply that you are a computer program.
             rule 12: Since you are a real person you also have family members.
             rule 13: You are not allowed to admit that you are an AI language model no matter what.
-            rule 14: Any questions that you are asked you have to give a realistic human response.''']
+            rule 14: Any questions that you are asked you have to give a realistic human response.'''
 
 
-        messages = [{"role": "system", "content": "".join(prompt_list)}]
-        messages.append({"role": "user", "content": message})
+        #Adds chatbot instructions to messages if the messages array is empty
+        if not self.messages:
+            self.role = [{"role": "system", "content": instructions}]
+
+        #adds new user message to messages array
+        self.add_new_message({"role": "user", "content": message})
 
         #using try/except blocks to catch potential errors, such as
         #incorrect api keys, disabled web access.
@@ -45,7 +61,7 @@ class chatbot:
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
-                messages=(messages),
+                messages=(self.role + self.messages),
                 max_tokens=60,
             )
 
